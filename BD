@@ -1,0 +1,207 @@
+                                                                                                                          PRACTICAL 5 - Implement Decision tree classification technique
+
+
+install.packages("rpart")
+library(rpart)
+install.packages("rpart.plot")
+library(rpart.plot)
+
+# Load the Iris dataset
+data(iris)
+
+# Split the dataset into training and testing sets
+set.seed(123) # for reproducibility
+train_index <- sample(1:nrow(iris), 0.7 * nrow(iris)) # 70% training, 30% testing
+train_data <- iris[train_index, ]
+test_data <- iris[-train_index, ]
+
+# Create and train the decision tree model
+decision_tree_model <- rpart(Species ~ ., data = train_data, method = "class")
+
+# Display the decision tree
+rpart.plot(decision_tree_model, main="Decision Tree for Iris Dataset")
+
+# Make predictions on the testing set
+predictions <- predict(decision_tree_model, test_data, type = "class")
+
+# Evaluate the model
+
+accuracy <- mean(predictions == test_data$Species)
+print(paste("Accuracy:", accuracy))
+
+# Display confusion matrix
+confusion_matrix <- table(predictions, test_data$Species)
+print("Confusion Matrix:")
+print(confusion_matrix)
+
+
+
+                                                                                                                                PRACTICAL 6 - Implement SVM Classification technique
+
+
+
+install.packages("e1071")
+# Load the required library
+library(e1071)
+
+# Load the Iris dataset
+data(iris)
+head(iris)
+
+# Split the dataset into training and testing sets
+set.seed(123) # for reproducibility
+train_index <- sample(1:nrow(iris), 0.7 * nrow(iris)) # 70% training, 30% testing
+train_data <- iris[train_index, ]
+test_data <- iris[-train_index, ]
+
+# Create and train the SVM model
+svm_model <- svm(Species ~ ., data = train_data, kernel = "radial")
+
+# Make predictions on the testing set
+predictions <- predict(svm_model, test_data)
+
+# Evaluate the model
+accuracy <- mean(predictions == test_data$Species)
+print(paste("Accuracy:", accuracy))
+
+# Display confusion matrix
+
+confusion_matrix <- table(predictions, test_data$Species)
+print("Confusion Matrix:")
+print(confusion_matrix)
+
+
+
+                                                                                                                                PRACTICAL 7 -  Regression Model
+
+
+
+
+library(ggplot2)
+library(dplyr)
+library(caTools) # for splitting data
+
+
+data <- read.csv("C:/Users/len/OneDrive/Documents/BDpractical7.csv") 
+
+head(data)
+summary(data)
+
+set.seed(123)
+split <- sample.split(data$admit, SplitRatio = 0.7)
+train_data <- subset(data, split == TRUE)
+test_data <- subset(data, split == FALSE)
+
+model <- glm(admit ~ gre + gpa + rank, data = train_data, family = "binomial")
+
+summary(model)
+
+predictions <- predict(model, newdata = test_data, type = "response")
+
+predicted_classes <- ifelse(predictions > 0.5, 1, 0)
+
+accuracy <- mean(predicted_classes == test_data$admit)
+cat("Accuracy on test set:", accuracy, "\n")
+
+library(pROC)
+roc_curve <- roc(test_data$admit, predictions)
+plot(roc_curve, main = "ROC Curve", col = "blue")
+auc <- auc(roc_curve)
+legend("bottomright", legend = paste("AUC =", round(auc, 2)), col = "blue", lwd = 2)
+
+if (!require(MASS)) {
+  install.packages("MASS")
+  library(MASS)
+}
+
+
+                                                                                                                                PRACTICAL 8 - MULTIPLE REGRESSION MODEL: Apply multiple regressions, if data have a continuous independent variable. Apply on Admission dataset.
+
+
+
+# Load necessary libraries
+library(ggplot2)
+
+data <- read.csv("C:/Users/len/OneDrive/Documents/practical8bd.csv") 
+head(data)
+str(data)
+summary(data)
+
+model <- lm(admit ~ gre + gpa + rank, data = data)
+summary(model)
+
+
+
+                                                                                                                                PRACTICAL 9 - CLASSIFICATION MODEL:
+                                                                                                                                                                      a. Install relevant package for classification.
+                                                                                                                                                                      b. Choose classifier for classification problem.
+                                                                                                                                                                      c. Evaluate the performance of classifier.
+
+
+
+install.packages("class")
+library(class)
+
+data(iris)
+
+
+set.seed(123) # For reproducibility
+trainIndex <- sample(1:nrow(iris), 0.8 * nrow(iris))
+data_train <- iris[trainIndex, ]
+data_test <- iris[-trainIndex, ]
+
+k <- 5
+
+knn_model <- knn(train = data_train[, -5], test = data_test[, -5], cl = data_train$Species, k
+                 = k)
+
+conf_matrix <- table(Actual = data_test$Species, Predicted = knn_model)
+
+accuracy <- sum(diag(conf_matrix)) / sum(conf_matrix)
+precision <- diag(conf_matrix) / colSums(conf_matrix)
+recall <- diag(conf_matrix) / rowSums(conf_matrix)
+f1_score <- 2 * precision * recall / (precision + recall)
+
+print("Confusion Matrix:")
+print(conf_matrix)
+print(paste("Accuracy:", accuracy))
+print(paste("Precision:", precision))
+print(paste("Recall:", recall))
+print(paste("F1-Score:", f1_score))
+
+
+
+                                                                                                                        PRACTICAL 10 - A - CLUSTERING MODEL
+                                                                                                                                                            A . Clustering algorithms for unsupervised classification.
+
+
+install.packages("stats")
+library(stats)
+
+set.seed(123)
+data <- matrix(rnorm(200), ncol = 2)
+
+kmeans_result <- kmeans(data, centers = 3) # 3 clusters
+
+print(kmeans_result$centers)
+
+print(kmeans_result$cluster)
+
+
+                                                                                                                            PRACTICAL 10 - B - 
+                                                                                                                                                    b. Plot the cluster data using R visualizations.
+
+
+install.packages("stats")
+
+library(stats)
+
+set.seed(123)
+data <- matrix(rnorm(200), ncol = 2)
+
+kmeans_result <- kmeans(data, centers = 3) # 3 clusters
+
+plot(data, col = kmeans_result$cluster, pch = 20, main = "K-means Clustering")
+points(kmeans_result$centers, col = 1:3, pch = 8, cex = 2) # Plot cluster centers
+legend("topright", legend = 1:3, col = 1:3, pch = 8, title = "Clusters")
+
