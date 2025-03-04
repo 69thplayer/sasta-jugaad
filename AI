@@ -634,7 +634,7 @@ for fact in inferred_facts:
 
 
 
-                                                                                                practical 7 B- TWO CLASS DECISION (SUNNY RAINY)
+                                                                                                practical 7 A- TWO CLASS DECISION (SUNNY RAINY)
 
 
 class DecisionNode:
@@ -819,4 +819,62 @@ print("Shortest Distance:", shortest_distance)
 
 
 
-practical 10 - 
+practical 10 A - B] Support Vector Machine
+
+
+from sklearn import datasets
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score
+
+# Load the iris dataset (a popular dataset for classification)
+iris = datasets.load_iris()
+X = iris.data
+y = iris.target
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+# Initialize the SVM classifier
+svm = SVC(kernel='linear')
+
+# Train the classifier on the training data
+svm.fit(X_train, y_train)
+
+# Make predictions on the testing data
+y_pred = svm.predict(X_test)
+
+# Calculate the accuracy of the model
+accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy:", accuracy)
+
+
+
+PRACTICAL 10 A- SIMPLE NEURAL NETWORK
+
+
+
+import numpy as np
+from keras.models import Sequential
+from keras.layers import Dense, Input
+
+# Create some dummy data for training
+X_train = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+y_train = np.array([0, 0, 0, 1])  # Fixed incorrect closing bracket
+
+# Define the neural network model
+model = Sequential()
+model.add(Input(shape=(2,)))
+model.add(Dense(2, activation='relu'))  # Fixed missing equals sign
+model.add(Dense(1, activation='sigmoid'))  # Output layer with 1 neuron
+
+# Compile the model
+model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+
+# Train the model
+model.fit(X_train, y_train, epochs=10, batch_size=4)  # Fixed incorrect assignment
+
+# Evaluate the model
+loss, accuracy = model.evaluate(X_train, y_train)  # Fixed incorrect assignment
+print("Accuracy:", accuracy)
+
