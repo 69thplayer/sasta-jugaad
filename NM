@@ -1,0 +1,232 @@
+                                                                                                          PRACTICAL 1 - Bisection Method
+
+
+import scipy
+
+from scipy.optimize import bisect
+
+# Define the function
+def f(x):
+    return x**2 - x - 2
+
+# Define the interval [a, b] where f(a) and f(b) have opposite signs
+a, b = 1, 3
+
+# Use the inbuilt bisection method
+root = bisect(f, a, b)
+
+# Print the result
+print(f"Approximate root: {root:.6f}")
+
+
+
+                                                                                                          Practical 2 - Regula Falsi Method
+
+
+
+import scipy
+
+#Using Built-in Function
+from scipy.optimize import brentq
+
+# Define the function
+def f(x):
+    return x**3 - x - 1
+
+# Define the interval [a, b]
+a, b = 1, 2  # The function changes sign in this interval
+
+# Use Brent's method to find the root
+root = brentq(f, a, b)
+
+# Print the result
+print(f"Approximate root (Brent’s method): {root:.6f}")
+
+
+
+                                                                                                          PRACTICAL 3 - Newton Raphson Method
+
+
+import scipy
+
+#Using Inbuilt Function
+from scipy.optimize import newton
+
+# Define the function
+def f(x):
+    return x**3 - 2*x - 5
+
+# Define the derivative of the function
+def df(x):
+    return 3*x**2 - 2
+
+# Use Newton-Raphson method (starting from an initial guess)
+initial_guess = 2  # Choosing 2 as a reasonable starting point
+root = newton(f, initial_guess, fprime=df)
+
+# Print the result
+print(f"Approximate root (Newton-Raphson method): {root:.6f}")
+
+
+
+                                                                                                          PRACTICAL 4 - GAUSS ELIMINATION METHOD
+
+
+
+import numpy as np
+
+# Define matrix A and vector b
+A = np.array([[3, 6, 1],
+              [2, 4, 3],
+              [1, 3, 2]], dtype=float)
+
+b = np.array([16, 13, 9], dtype=float)
+
+# Solve using NumPy's inbuilt function
+solution = np.linalg.solve(A, b)
+
+# Print the result
+print("Solution (Using NumPy):", solution)
+
+
+
+  
+                                                                                                              PRACTICAL 5 - L.U. decomposition method
+
+
+
+import numpy as np
+from scipy.linalg import lu, lu_factor, lu_solve
+
+# Define matrix A and vector B
+A = np.array([[2, 5],
+              [1, 2]], dtype=float)
+
+B = np.array([21, 8], dtype=float)
+
+# Perform LU decomposition
+LU, piv = lu_factor(A)
+
+# Solve for X using the LU decomposition
+X = lu_solve((LU, piv), B)
+
+# Print results
+print("Solution (x, y):", X)
+
+
+
+                                                                                                        Practical 6 - Newton COTE's  TRAPEZOIDAL METHOD 
+
+
+
+import numpy as np
+
+# Define the function
+def f(x):
+    return 1 / (1 + x)
+
+# Define limits and number of subintervals
+a, b = 0, 1  # Integration limits
+n = 6  # Number of intervals
+
+# Create equally spaced points
+x = np.linspace(a, b, n+1)
+y = f(x)
+
+# Trapezoidal Rule (NumPy)
+trapz_result = np.trapz(y, x)
+
+# Print the result
+print(f"Trapezoidal Rule Result: {trapz_result:.6f}")
+
+
+
+                                                                                                            PRACTICAL 6 - NEWTON COTE'S SIMPSON 1/3 RULE
+
+
+
+from scipy.integrate import simps
+import numpy as np
+
+# Define the function
+def f(x):
+    return 1 / (1 + x)
+
+# Define limits and number of subintervals
+a, b = 0, 1  # Integration limits
+n = 6  # Number of intervals (must be even)
+
+# Create equally spaced points
+x = np.linspace(a, b, n+1)
+y = f(x)
+
+# Simpson's 1/3rd Rule (SciPy)
+simps_1_3_result = simps(y, x)
+
+# Print the result
+print(f"Simpson's 1/3rd Rule Result: {simps_1_3_result:.6f}")
+
+
+
+
+                                                                                                                  PRACTICAL 7 -  EULER'S METHOD
+
+
+
+
+import numpy as np
+
+# Define the differential equation dy/dx = y + x
+def f(x, y):
+    return y + x
+
+# Euler's Method Implementation
+def euler_method(f, x0, y0, h, x_end):
+    x = x0
+    y = y0
+    while x < x_end:
+        y = y + h * f(x, y)
+        x += h
+    return y
+
+# Initial conditions
+x0 = 0
+y0 = 2
+h = 0.05
+x_end = 2
+
+# Compute the solution
+y_2 = euler_method(f, x0, y0, h, x_end)
+print(f"Approximate solution at x = {x_end} is y({x_end}) ≈ {y_2}")
+
+
+
+
+                                                                                                                  PRACTICAL 8 - RUNGE KUTTA METHOD
+
+
+
+
+
+import numpy as np
+from scipy.integrate import solve_ivp
+
+# Define the differential equation dy/dx = x + y
+def func(x, y):
+    return x + y
+
+# Initial condition
+x0, y0 = 0, 1
+
+# Define the range to solve for
+x_end = 1.1
+
+# Solve the ODE using the Runge-Kutta method (RK45 is default)
+# Use np.linspace to ensure the last value is exactly x_end
+solution = solve_ivp(func, (x0, x_end), [y0], method='RK45', t_eval=np.linspace(x0, x_end, int((x_end-x0)/0.1)+1))
+
+# Extract the result for y(1.1)
+y_1_1 = solution.y[0][-1]
+
+# Print the result
+print(f"y(1.1) ≈ {y_1_1:.6f}")
