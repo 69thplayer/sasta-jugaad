@@ -145,26 +145,16 @@ print(f"Trapezoidal Rule Result: {trapz_result:.6f}")
 
 
 
-from scipy.integrate import simps
+
 import numpy as np
 
-# Define the function
-def f(x):
-    return 1 / (1 + x)
+a, b, n = 0, 1, 6
+x = np.linspace(a, b, n + 1)
+y = 1 / (1 + x)
+h = (b - a) / n
 
-# Define limits and number of subintervals
-a, b = 0, 1  # Integration limits
-n = 6  # Number of intervals (must be even)
-
-# Create equally spaced points
-x = np.linspace(a, b, n+1)
-y = f(x)
-
-# Simpson's 1/3rd Rule (SciPy)
-simps_1_3_result = simps(y, x)
-
-# Print the result
-print(f"Simpson's 1/3rd Rule Result: {simps_1_3_result:.6f}")
+result = (y[0] + y[-1] + 4 * np.sum(y[1:n:2]) + 2 * np.sum(y[2:n-1:2])) * h / 3
+print(f"Simpson's 1/3rd Rule Result: {result:.6f}")
 
 
 
