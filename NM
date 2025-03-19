@@ -134,7 +134,7 @@ x = np.linspace(a, b, n+1)
 y = f(x)
 
 # Trapezoidal Rule (NumPy)
-trapz_result = np.trapz(y, x)
+trapz_result = np.trapezoid(y, x)
 
 # Print the result
 print(f"Trapezoidal Rule Result: {trapz_result:.6f}")
