@@ -236,7 +236,8 @@ anova_table = sm.stats.anova_lm(model, typ=2)
 
 print(anova_table)
 
-p_value = anova_table["PR(>F)"][0]
+# Use .iloc[] for positional indexing
+p_value = anova_table["PR(>F)"].iloc[0]  
 alpha = 0.05
 
 if p_value < alpha:
