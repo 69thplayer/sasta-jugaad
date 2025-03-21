@@ -1,0 +1,854 @@
+                                                                                                      PRACTICAL 1- Water Jug problem
+
+
+from collections import defaultdict
+jug1,jug2,goal =4,3,2
+
+visited=defaultdict(lambda:False)
+def waterJug(amt1,amt2):
+    if(amt1==goal and amt2==0) or (amt2==goal and amt1==0):
+        print(amt1,amt2)
+        return True
+    if visited[(amt1,amt2)]== False:
+        print(amt1,amt2)
+        visited[(amt1,amt2)]=True
+        return(waterJug(0, amt2) or
+               waterJug(amt1,0)or
+               waterJug(jug1,amt2) or
+               waterJug(amt1,jug2)or
+               waterJug(amt1+min(amt2,(jug1-amt1)),
+                        amt2-min(amt2,(jug1-amt1))) or
+               waterJug(amt1-min(amt1,(jug2-amt2)),
+                        amt2+min(amt1,(jug2-amt2))))
+    else:
+        return False
+print("steps :")
+waterJug(0,0)
+
+
+
+                                                                                                        PRACTICAL 2 A - DEPTH FIRST SEARCH
+
+
+graph = {
+    'A': ['B', 'C'],
+    'B': ['D', 'E'],
+    'C': ['F'],
+    'D': [],
+    'E': ['F'],
+    'F': []
+}
+
+visited = set() 
+
+def dfs(visited, graph, node):
+    if node not in visited:
+        print(node)  
+        visited.add(node) 
+        for neighbour in graph[node]:  
+            dfs(visited, graph, neighbour)
+
+dfs(visited, graph, 'A')
+
+
+
+                                                                                                  PRACTICAL 2 B - breath firsst search 
+
+
+
+graph = {
+    'A': ['B', 'C'],
+    'B': ['D', 'E'],
+    'C': ['F'],
+    'D': [],
+    'E': ['F'],
+    'F': []
+}
+
+visited = []  
+queue = []    
+
+def bfs(visited, graph, node):
+    visited.append(node)  
+    queue.append(node)    
+
+    while queue:
+        s = queue.pop(0)  
+        print(s, end=" ") 
+
+        
+        for neighbour in graph[s]:
+            if neighbour not in visited:
+                visited.append(neighbour)
+                queue.append(neighbour)
+
+print("BFS Traversal starting from node 'B':")
+bfs(visited, graph, 'B')
+
+
+
+
+                                                                                                      PRACTICAL 3 - HILL CLIMBING
+
+
+
+import math
+increment = 0.1
+startingPoint = [1, 1]
+point1 = [1,5]
+point2 = [6,4]
+point3 = [5,2]
+point4 = [2,1]
+def distance(x1, y1, x2, y2):
+ dist = math.pow(x2-x1, 2) + math.pow(y2-y1, 2)
+ return dist
+def sumOfDistances(x1, y1, px1, py1, px2, py2, px3, py3, px4, py4):
+ d1 = distance(x1, y1, px1, py1)
+ d2 = distance(x1, y1, px2, py2)
+ d3 = distance(x1, y1, px3, py3)
+ d4 = distance(x1, y1, px4, py4)
+ return d1 + d2 + d3 + d4
+def newDistance(x1, y1, point1, point2, point3, point4):
+ d1 = [x1, y1]
+ d1temp = sumOfDistances(x1, y1, point1[0],point1[1], point2[0],point2[1],
+ point3[0],point3[1], point4[0],point4[1] )
+ d1.append(d1temp)
+ return d1
+minDistance = sumOfDistances(startingPoint[0], startingPoint[1],
+point1[0],point1[1], point2[0],point2[1],
+ point3[0],point3[1], point4[0],point4[1] )
+flag = True
+def newPoints(minimum, d1, d2, d3, d4):
+ if d1[2] == minimum:
+  return [d1[0], d1[1]]
+ elif d2[2] == minimum:
+  return [d2[0], d2[1]]
+ elif d3[2] == minimum:
+  return [d3[0], d3[1]]
+ elif d4[2] == minimum:
+  return [d4[0], d4[1]]
+i = 1
+while flag:
+ d1 = newDistance(startingPoint[0]+increment, startingPoint[1], point1, point2,
+point3, point4)
+ d2 = newDistance(startingPoint[0]-increment, startingPoint[1], point1, point2,
+point3, point4)
+ d3 = newDistance(startingPoint[0], startingPoint[1]+increment, point1, point2,
+point3, point4)
+ d4 = newDistance(startingPoint[0], startingPoint[1]-increment, point1, point2,
+point3, point4)
+ print (i,' ', round(startingPoint[0], 2), round(startingPoint[1], 2))
+ minimum = min(d1[2], d2[2], d3[2], d4[2])
+ if minimum < minDistance:
+  startingPoint = newPoints(minimum, d1, d2, d3, d4)
+  minDistance = minimum
+  #print i,' ', round(startingPoint[0], 2), round(startingPoint[1], 2)
+  i+=1
+ else:
+  flag = False 
+
+
+
+                                                                                                            practical 4 A -4 queen problem
+
+
+def is_safe(board, row, col, n):
+    for i in range(col):
+        if board[row][i] == 1:
+            return False
+
+    for i, j in zip(range(row, -1, -1), range(col, -1, -1)):
+        if board[i][j] == 1:
+            return False
+
+    for i, j in zip(range(row, n, 1), range(col, -1, -1)):
+        if board[i][j] == 1:
+            return False
+
+    return True
+
+def solve_n_queens_util(board, col, n):
+    if col >= n:
+        return True
+
+    for i in range(n):
+        if is_safe(board, i, col, n):
+            board[i][col] = 1  # Place the queen
+
+            if solve_n_queens_util(board, col + 1, n):
+                return True
+            board[i][col] = 0
+
+    return False
+
+def solve_n_queens(n):
+    
+    board = [[0 for _ in range(n)] for _ in range(n)]
+
+    
+    if not solve_n_queens_util(board, 0, n):
+        print("Solution does not exist")
+        return False
+
+    
+    print("Solution for", n, "queens:")
+    for row in board:
+        print(row)
+
+
+n = 4
+solve_n_queens(n)
+
+
+
+                                                                                                      PRACTICAL 4 B - ADJACENT COLORS 
+
+
+
+def is_safe(graph, node, color, color_map):
+    
+    for neighbor in graph[node]:
+        if neighbor in color_map and color_map[neighbor] == color:
+            return False
+    return True
+
+def map_coloring_util(graph, colors, node, color_map):
+    
+    if node == len(graph):
+        return True
+    
+   
+    for color in colors:
+        if is_safe(graph, node, color, color_map):
+            color_map[node] = color
+           
+            if map_coloring_util(graph, colors, node + 1, color_map):
+                return True
+            
+            color_map[node] = None
+    
+    return False
+
+def map_coloring(graph, colors):
+    color_map = {node: None for node in graph}  # Initialize color map
+    if map_coloring_util(graph, colors, 0, color_map):
+        print("Map coloring solution:")
+        for node, color in color_map.items():
+            print(f"Node {node}: {color}")
+    else:
+        print("No solution found")
+
+
+graph = {
+    0: [1, 2],
+    1: [0, 2, 3],
+    2: [0, 1, 3],
+    3: [1, 2]
+}
+colors = ['Red', 'Green', 'Blue']
+map_coloring(graph, colors)
+
+
+
+
+                                                                                                  PRACTICAL 5 A- TIC TAC TOE
+
+
+
+import os
+import time
+
+
+board = [' '] * 10  # Index 0 is unused for convenience
+player = 1
+
+
+Win = 1
+Draw = -1
+Running = 0
+Game = Running
+
+
+def DrawBoard():
+    print(" %c | %c | %c " % (board[1], board[2], board[3]))
+    print("___|___|___")
+    print(" %c | %c | %c " % (board[4], board[5], board[6]))
+    print("___|___|___")
+    print(" %c | %c | %c " % (board[7], board[8], board[9]))
+    print("   |   |   ")
+
+
+def CheckPosition(x):
+    return board[x] == ' '
+
+
+def CheckWin():
+    global Game
+
+    
+    winning_combinations = [
+        [1, 2, 3], [4, 5, 6], [7, 8, 9],  # Rows
+        [1, 4, 7], [2, 5, 8], [3, 6, 9],  # Columns
+        [1, 5, 9], [3, 5, 7]             # Diagonals
+    ]
+
+    for combo in winning_combinations:
+        if board[combo[0]] == board[combo[1]] == board[combo[2]] and board[combo[0]] != ' ':
+            Game = Win
+            return
+
+    
+    if ' ' not in board[1:]:
+        Game = Draw
+    else:
+        Game = Running
+
+
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+
+print("Tic-Tac-Toe Game")
+print("Player 1 [X] --- Player 2 [O]\n")
+print("Please Wait...")
+time.sleep(1)
+
+while Game == Running:
+    clear_screen()
+    DrawBoard()
+    
+    if player % 2 != 0:
+        print("Player 1's turn (X)")
+        Mark = 'X'
+    else:
+        print("Player 2's turn (O)")
+        Mark = 'O'
+
+    try:
+        choice = int(input("Enter the position [1-9]: "))
+        if choice < 1 or choice > 9:
+            print("Invalid position! Choose between 1-9.")
+            time.sleep(1)
+            continue
+    except ValueError:
+        print("Invalid input! Enter a number between 1-9.")
+        time.sleep(1)
+        continue
+
+    if CheckPosition(choice):
+        board[choice] = Mark
+        player += 1
+        CheckWin()
+    else:
+        print("Position already taken! Try again.")
+        time.sleep(1)
+
+clear_screen()
+DrawBoard()
+
+if Game == Draw:
+    print("Game Drawn!")
+elif Game == Win:
+    winner = "Player 1" if (player - 1) % 2 != 0 else "Player 2"
+    print(f"{winner} Won!")
+
+
+
+                                                                                                      PRACTICAL 5 B - ALPHA BETA PRUNING
+
+
+import math
+
+def minimax_alpha_beta(node, depth, alpha, beta, maximizingPlayer):
+    if depth == 0 or node.is_terminal():
+        return node.evaluate(), None
+
+    if maximizingPlayer:
+        maxEval = -math.inf
+        bestMove = None
+        for move in node.get_possible_moves():
+            child = node.make_move(move)
+            eval, _ = minimax_alpha_beta(child, depth - 1, alpha, beta, False)
+            if eval > maxEval:
+                maxEval = eval
+                bestMove = move
+            alpha = max(alpha, eval)
+            if beta <= alpha:
+                break  # Beta cut-off
+        return maxEval, bestMove
+
+    else:
+        minEval = math.inf
+        bestMove = None
+        for move in node.get_possible_moves():
+            child = node.make_move(move)
+            eval, _ = minimax_alpha_beta(child, depth - 1, alpha, beta, True)
+            if eval < minEval:
+                minEval = eval
+                bestMove = move
+            beta = min(beta, eval)
+            if beta <= alpha:
+                break  # Alpha cut-off
+        return minEval, bestMove
+
+
+class Node:
+    def __init__(self, value):
+        self.value = value
+
+    def evaluate(self):
+        return self.value
+
+    def is_terminal(self):
+        return True  # Always terminal for this example
+
+    def get_possible_moves(self):
+        return []  # No moves since it's terminal
+
+    def make_move(self, move):
+        return None  # No actual move processing in this simple example
+
+
+root = Node(3)
+best_score, best_move = minimax_alpha_beta(root, 3, -math.inf, math.inf, True)
+print("Best move:", best_move, "with score:", best_score)
+
+
+
+                                                                                              practical 6 - missionaries and cannibals
+
+
+import math
+
+
+class State():
+    def __init__(self, cannibalLeft, missionaryLeft, boat, cannibalRight, missionaryRight):
+        self.cannibalLeft = cannibalLeft
+        self.missionaryLeft = missionaryLeft
+        self.boat = boat
+        self.cannibalRight = cannibalRight
+        self.missionaryRight = missionaryRight
+        self.parent = None
+
+    def is_goal(self):
+        return self.cannibalLeft == 0 and self.missionaryLeft == 0
+
+    def is_valid(self):
+        return self.missionaryLeft >= 0 and self.missionaryRight >= 0 \
+            and self.cannibalLeft >= 0 and self.cannibalRight >= 0 \
+            and (self.missionaryLeft == 0 or self.missionaryLeft >= self.cannibalLeft) \
+            and (self.missionaryRight == 0 or self.missionaryRight >= self.cannibalRight)
+
+    def __eq__(self, other):
+        return self.cannibalLeft == other.cannibalLeft and self.missionaryLeft == other.missionaryLeft \
+            and self.boat == other.boat and self.cannibalRight == other.cannibalRight \
+            and self.missionaryRight == other.missionaryRight
+
+    def __hash__(self):
+        return hash((self.cannibalLeft, self.missionaryLeft, self.boat,
+                     self.cannibalRight, self.missionaryRight))
+
+def successors(cur_state):
+    children = []
+
+    if cur_state.boat == 'left':
+        # Two missionaries cross left to right.
+        new_state = State(cur_state.cannibalLeft, cur_state.missionaryLeft - 2, 'right',
+                          cur_state.cannibalRight, cur_state.missionaryRight + 2)
+        if new_state.is_valid():
+            new_state.parent = cur_state
+            children.append(new_state)
+
+        # Two cannibals cross left to right.
+        new_state = State(cur_state.cannibalLeft - 2, cur_state.missionaryLeft, 'right',
+                          cur_state.cannibalRight + 2, cur_state.missionaryRight)
+        if new_state.is_valid():
+            new_state.parent = cur_state
+            children.append(new_state)
+
+        # One missionary and one cannibal cross left to right.
+        new_state = State(cur_state.cannibalLeft - 1, cur_state.missionaryLeft - 1, 'right',
+                          cur_state.cannibalRight + 1, cur_state.missionaryRight + 1)
+        if new_state.is_valid():
+            new_state.parent = cur_state
+            children.append(new_state)
+
+        # One missionary crosses left to right.
+        new_state = State(cur_state.cannibalLeft, cur_state.missionaryLeft - 1, 'right',
+                          cur_state.cannibalRight, cur_state.missionaryRight + 1)
+        if new_state.is_valid():
+            new_state.parent = cur_state
+            children.append(new_state)
+
+        # One cannibal crosses left to right.
+        new_state = State(cur_state.cannibalLeft - 1, cur_state.missionaryLeft, 'right',
+                          cur_state.cannibalRight + 1, cur_state.missionaryRight)
+        if new_state.is_valid():
+            new_state.parent = cur_state
+            children.append(new_state)
+
+    else:
+        # Two missionaries cross right to left.
+        new_state = State(cur_state.cannibalLeft + 2, cur_state.missionaryLeft, 'left',
+                          cur_state.cannibalRight - 2, cur_state.missionaryRight)
+        if new_state.is_valid():
+            new_state.parent = cur_state
+            children.append(new_state)
+
+        # One missionary and one cannibal cross right to left.
+        new_state = State(cur_state.cannibalLeft + 1, cur_state.missionaryLeft + 1, 'left',
+                          cur_state.cannibalRight - 1, cur_state.missionaryRight - 1)
+        if new_state.is_valid():
+            new_state.parent = cur_state
+            children.append(new_state)
+
+        # One missionary crosses right to left.
+        new_state = State(cur_state.cannibalLeft, cur_state.missionaryLeft + 1, 'left',
+                          cur_state.cannibalRight, cur_state.missionaryRight - 1)
+        if new_state.is_valid():
+            new_state.parent = cur_state
+            children.append(new_state)
+
+        # One cannibal crosses right to left.
+        new_state = State(cur_state.cannibalLeft + 1, cur_state.missionaryLeft, 'left',
+                          cur_state.cannibalRight - 1, cur_state.missionaryRight)
+        if new_state.is_valid():
+            new_state.parent = cur_state
+            children.append(new_state)
+
+    return children
+
+def breadth_first_search():
+    initial_state = State(3, 3, 'left', 0, 0)
+    if initial_state.is_goal():
+        return initial_state
+
+    frontier = []
+    explored = set()
+    frontier.append(initial_state)
+
+    while frontier:
+        state = frontier.pop(0)
+        if state.is_goal():
+            return state
+
+        explored.add(state)
+        children = successors(state)
+
+        for child in children:
+            if child not in explored and child not in frontier:
+                frontier.append(child)
+
+    return None
+
+def print_solution(solution):
+    path = []
+    path.append(solution)
+    parent = solution.parent
+
+    while parent:
+        path.append(parent)
+        parent = parent.parent
+
+    for t in range(len(path)):
+        state = path[len(path) - t - 1]
+        print(f"({state.cannibalLeft},{state.missionaryLeft},{state.boat},{state.cannibalRight},{state.missionaryRight})")
+
+def main():
+    solution = breadth_first_search()
+    print("Missionaries and Cannibals solution:")
+    print("(cannibalLeft,missionaryLeft,boat,cannibalRight,missionaryRight)")
+    print_solution(solution)
+
+if __name__ == "__main__":
+    main()
+
+
+                                                                                                        PRACTICAL 6 B - SIMPLE INFERENCE
+
+
+class Rule:
+    def __init__(self, premises, conclusion):
+        self.premises = premises
+        self.conclusion = conclusion
+
+    def apply(self, facts):
+        if all(premise in facts for premise in self.premises):
+            return self.conclusion
+        else:
+            return None
+
+class SimpleInferenceEngine:
+    def __init__(self, rules):
+        self.rules = rules
+
+    def infer(self, facts):
+        inferred_facts = set()
+        while True:
+            new_facts = set()
+            for rule in self.rules:
+                conclusion = rule.apply(facts)
+                if conclusion and conclusion not in facts:
+                    new_facts.add(conclusion)
+            if not new_facts:
+                break
+            inferred_facts.update(new_facts)
+            facts.update(new_facts)
+        return inferred_facts
+
+rules = [
+    Rule(["smokes", "coughs"], "lung disease"),
+    Rule(["lung disease"], "shortness of breath"),
+    Rule(["fever", "sore throat"], "cold"),
+    Rule(["cold"], "coughs")
+]
+
+inference_engine = SimpleInferenceEngine(rules)
+
+facts = {"smokes", "coughs"}
+
+inferred_facts = inference_engine.infer(facts)
+
+print("Inferred Facts:")
+for fact in inferred_facts:
+    print(fact)
+
+
+
+                                                                                                practical 7 A- TWO CLASS DECISION (SUNNY RAINY)
+
+
+class DecisionNode:
+    def __init__(self, question, yes_branch, no_branch):
+        self.question = question
+        self.yes_branch = yes_branch
+        self.no_branch = no_branch
+
+def decide(activity):
+    if activity == 'walk':
+        return "Let's go for a walk!"
+    elif activity == 'stay_home':
+        return "Let's stay home and relax."
+
+def one_step_decision(weather):
+    if weather == 'sunny':
+        return decide('walk')  
+    else:
+        return decide('stay_home')
+    
+def main():
+    
+    decision_tree = DecisionNode("Is the weather sunny?", "walk", "stay_home")
+    
+    weather = input("What is the weather like? (sunny/rainy): ").lower()  
+    decision = one_step_decision(weather)
+    print(decision)
+
+if __name__ == "__main__":  
+    main()
+
+
+
+                                                                                                  PRACTICAL 7 B - MULTI CLASS DECISION
+
+
+
+class DecisionNode:
+    def __init__(self, question, yes_branch, no_branch):
+        self.question = question
+        self.yes_branch = yes_branch
+        self.no_branch = no_branch
+
+def decide(activity):
+    if activity == 'walk':
+        return "Let's go for a walk!"
+    elif activity == 'stay_home':
+        return "Let's stay home and relax."
+
+def two_class_decision(weather, time_of_day):
+    if weather == 'sunny':
+        if time_of_day in ['morning', 'afternoon']:
+            return decide('walk')
+        return decide('stay_home')
+    else:
+        return decide('stay_home')
+
+def main():
+    weather = input("What is the weather like? (sunny/rainy): ").lower()
+    time_of_day = input("What time of day is it? (morning/afternoon/evening): ").lower()
+    decision = two_class_decision(weather, time_of_day)
+    print(decision)
+
+if __name__ == "__main__":
+    main()
+
+
+
+                                                                                                  PRACTICAL 8 A - LINEAR REGRESSION
+
+
+
+import numpy as np
+
+class LinearRegression:
+    def fit(self, X, y):
+        # Add bias term to X
+        X = np.c_[np.ones((X.shape[0], 1)), X]
+        # Calculate coefficients using Ordinary Least Squares (OLS) method
+        self.coefficients = np.linalg.inv(X.T.dot(X)).dot(X.T).dot(y)
+
+    def predict(self, X):
+        # Add bias term to X
+        X = np.c_[np.ones((X.shape[0], 1)), X]
+        # Predict using the learned coefficients
+        return X.dot(self.coefficients)
+
+def main():
+    # Sample data for demonstration
+    X = np.array([[1], [2], [3], [4], [5]])  # Features
+    y = np.array([2, 4, 5, 4, 5])            # Target variable
+
+    # Initialize and fit the linear regression model
+    model = LinearRegression()
+    model.fit(X, y)
+
+    # Make predictions
+    X_test = np.array([[6], [7]])
+    predictions = model.predict(X_test)
+
+    # Print predictions
+    print("Predictions:", predictions)
+
+
+if __name__ == "__main__":
+    main()
+
+
+
+                                                                                              practical 8 B- CLASSIFICATION PROBLEMS 
+
+
+
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score
+
+iris = load_iris()
+X, y = iris.data, iris.target
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+clf = KNeighborsClassifier(n_neighbors=3)
+
+clf.fit(X_train, y_train)
+
+y_pred = clf.predict(X_test)
+
+accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy:", accuracy)
+
+
+
+                                                                                                PRACTICAL 9- TRAVELING SALESMAN PROBLEM 
+
+
+
+import itertools
+
+def distance(city1, city2):
+   
+    return ((city1[0] - city2[0])**2 + (city1[1] - city2[1])**2) ** 0.5
+
+def total_distance(path, cities):
+    
+    total = 0
+    for i in range(len(path) - 1):
+        total += distance(cities[path[i]], cities[path[i + 1]])
+    total += distance(cities[path[-1]], cities[path[0]])  # Return to the starting city
+    return total
+
+def traveling_salesman(cities):
+    
+    num_cities = len(cities)
+    shortest_path = None
+    shortest_distance = float('inf')
+    
+    for path in itertools.permutations(range(num_cities)):
+        d = total_distance(path, cities)
+        if d < shortest_distance:
+            shortest_distance = d
+            shortest_path = path
+            
+    return shortest_path, shortest_distance
+
+
+cities = [(0, 0), (1, 2), (3, 1), (5, 3)]
+
+
+shortest_path, shortest_distance = traveling_salesman(cities)
+
+print("Shortest Path:", shortest_path)
+print("Shortest Distance:", shortest_distance)
+
+
+
+                                                                                                                                    practical 10   B] Support Vector Machine
+
+
+from sklearn import datasets
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score
+
+
+iris = datasets.load_iris()
+X = iris.data
+y = iris.target
+
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+
+svm = SVC(kernel='linear')
+
+
+svm.fit(X_train, y_train)
+
+
+y_pred = svm.predict(X_test)
+
+
+accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy:", accuracy)
+
+
+
+                                                                                                                                      PRACTICAL 10 A- SIMPLE NEURAL NETWORK
+
+
+
+import numpy as np
+from keras.models import Sequential
+from keras.layers import Dense, Input
+
+
+X_train = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+y_train = np.array([0, 0, 0, 1])  # Fixed incorrect closing bracket
+
+
+model = Sequential()
+model.add(Input(shape=(2,)))
+model.add(Dense(2, activation='relu'))  # Fixed missing equals sign
+model.add(Dense(1, activation='sigmoid'))  # Output layer with 1 neuron
+
+
+model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+
+
+model.fit(X_train, y_train, epochs=10, batch_size=4)  # Fixed incorrect assignment
+
+
+loss, accuracy = model.evaluate(X_train, y_train)  # Fixed incorrect assignment
+print("Accuracy:", accuracy)
+
